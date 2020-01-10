@@ -1,19 +1,16 @@
 package demo;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 class Portfolio {
-    private static final String URL_FMT = "https://min-api.cryptocompare.com/data/price?fsym=%s&tsyms=EUR";//properties?
     private static final BigDecimal zero = new BigDecimal(0);
-    private final HttpClient httpClient = HttpClient.newBuilder().build();
+    private final PriceProvider priceProvider;
+
+    public Portfolio(PriceProvider priceProvider) {
+        this.priceProvider = priceProvider;
+    }
 
     BigDecimal equity(Stream<String> lines) {
         return lines.reduce(zero, this::reducer, BigDecimal::add);
@@ -33,7 +30,7 @@ class Portfolio {
     }
 
     private BigDecimal price(String cryptoName) {
-        HttpResponse<String> response = sendGetRequest(cryptoName);
+        HttpResponse<String> response = priceProvider.getPrice(cryptoName);
         String json = response.body();
         int status = response.statusCode();
         if (status >= 400 && status < 500) {
@@ -46,15 +43,4 @@ class Portfolio {
                 "Error message on the http response is: " + json);
     }
 
-    private HttpResponse<String> sendGetRequest(String cryptoName) {
-        URI uri = URI.create(String.format(URL_FMT, cryptoName));
-        HttpRequest request = HttpRequest.newBuilder().GET().uri(uri).build();
-        try {
-            return httpClient.send(request, HttpResponse.BodyHandlers.ofString());//sync for this simple case, there aren't many crypto coins traded
-        } catch (IOException e) {
-            throw new IllegalStateException("Problem with the HTTP round trip to get the price for " + cryptoName, e);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException("Interrupted", e);
-        }
-    }
 }

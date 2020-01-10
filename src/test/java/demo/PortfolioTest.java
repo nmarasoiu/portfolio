@@ -2,7 +2,14 @@ package demo;
 
 import org.junit.Test;
 
+import javax.net.ssl.SSLSession;
 import java.math.BigDecimal;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -11,7 +18,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class PortfolioTest {
 
     private static final BigDecimal zero = new BigDecimal(0);
-    private static final Portfolio portfolio = new Portfolio();
+    private static final Portfolio portfolio = new Portfolio(cryptoName -> mockedResponse());
+    public static final BigDecimal price = new BigDecimal("2.2");
 
     @Test
     public void equityEmpty() {
@@ -38,18 +46,57 @@ public class PortfolioTest {
     public void equityNonExistentCrypto() {
         assertThat(portfolio.equity(Stream.of("a=2")), equalTo(zero));
     }
+
     @Test
     public void equityOkReqOneCrypto() {
-        assertPositive(portfolio.equity(Stream.of("BTC=123")));
+        assertThat(portfolio.equity(Stream.of("BTC=123")), equalTo(new BigDecimal(123).multiply(price)));
     }
-
     @Test
     public void equityOkReqTowCryptoCoins() {
-        assertPositive(portfolio.equity(Stream.of("BTC=123", "XRP=127834")));
+        assertThat(portfolio.equity(Stream.of("BTC=123", "XRP=127834")), equalTo(new BigDecimal(123+127834).multiply(price)));
     }
 
-    private void assertPositive(BigDecimal equity) {
-        assertThat(equity.compareTo(zero), equalTo(1));
-    }
+    private static HttpResponse<String> mockedResponse() {
+        return new HttpResponse<>() {
+            @Override
+            public int statusCode() {
+                return 200;
+            }
 
+            @Override
+            public String body() {
+                return "{'EUR':2.2}";
+            }
+            @Override
+            public HttpRequest request() {
+                return null;
+            }
+
+            @Override
+            public Optional<HttpResponse<String>> previousResponse() {
+                return Optional.empty();
+            }
+
+            @Override
+            public HttpHeaders headers() {
+                return null;
+            }
+
+
+            @Override
+            public Optional<SSLSession> sslSession() {
+                return Optional.empty();
+            }
+
+            @Override
+            public URI uri() {
+                return null;
+            }
+
+            @Override
+            public HttpClient.Version version() {
+                return null;
+            }
+        };
+    }
 }
