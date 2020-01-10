@@ -19,7 +19,7 @@ class Portfolio {
     private BigDecimal reducer(BigDecimal acc, String line) {
         String[] keyValue = line.split("=");
         if (keyValue.length != 2) {
-            throw new IllegalArgumentException("The line format is similar to BTC=12 meaning having 12 BTC in portfolio");
+            throw new IllegalArgumentException("The line format is similar to BTC=12 meaning having 12 BTC in portfolio: line=" + line);
         }
         String name = keyValue[0].trim();
         long count = Long.parseLong(keyValue[1].trim());
@@ -33,11 +33,11 @@ class Portfolio {
         HttpResponse<String> response = priceProvider.getPrice(cryptoName);
         String json = response.body();
         int status = response.statusCode();
-        if (status >= 400 && status < 500) {
+        if ((status >= 400 && status < 500) || json.length() > 21) {
             throw new IllegalArgumentException(json);//non existent crypto name or other client side request issue
         }
         if (status >= 200 && status < 300) {
-            return new BigDecimal(json.substring(7, json.length() - 1));
+            return new BigDecimal(json.substring(7, json.length() - 1));//normally extract thru pattern matching
         }
         throw new IllegalStateException("The were issues, please retry. Status code: " + status +
                 "Error message on the http response is: " + json);

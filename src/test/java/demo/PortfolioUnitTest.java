@@ -15,15 +15,15 @@ import java.util.stream.Stream;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class PortfolioTest {
+public class PortfolioUnitTest {
 
     private static final BigDecimal zero = new BigDecimal(0);
     private static final Portfolio portfolio = new Portfolio(cryptoName -> mockedResponse());
-    public static final BigDecimal price = new BigDecimal("2.2");
+    private static final BigDecimal price = new BigDecimal("2.2");
 
     @Test
     public void equityEmpty() {
-        Portfolio portfolio = PortfolioTest.portfolio;
+        Portfolio portfolio = PortfolioUnitTest.portfolio;
         assertThat(portfolio.equity(Stream.of()), equalTo(zero));
     }
 
@@ -40,11 +40,6 @@ public class PortfolioTest {
     @Test(expected = NumberFormatException.class)
     public void equityNumberFormatIssue() {
         assertThat(portfolio.equity(Stream.of("a=a")), equalTo(zero));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void equityNonExistentCrypto() {
-        assertThat(portfolio.equity(Stream.of("a=2")), equalTo(zero));
     }
 
     @Test

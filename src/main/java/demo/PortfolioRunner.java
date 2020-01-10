@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class PortfolioRunner {
-    private static final String URL_FMT = "https://min-api.cryptocompare.com/data/price?fsym=%s&tsyms=EUR";//properties?
+    static final String URL_FMT = "https://min-api.cryptocompare.com/data/price?fsym=%s&tsyms=EUR";//properties?
 
     private PortfolioRunner() {
     }
