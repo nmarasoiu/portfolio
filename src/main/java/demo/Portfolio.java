@@ -4,11 +4,13 @@ import java.math.BigDecimal;
 import java.net.http.HttpResponse;
 import java.util.stream.Stream;
 
+import static demo.Config.MIN_JSON_LEN_FOR_ERR;
+
 class Portfolio {
     private static final BigDecimal zero = new BigDecimal(0);
     private final PriceProvider priceProvider;
 
-    public Portfolio(PriceProvider priceProvider) {
+    Portfolio(PriceProvider priceProvider) {
         this.priceProvider = priceProvider;
     }
 
@@ -33,7 +35,7 @@ class Portfolio {
         HttpResponse<String> response = priceProvider.getPrice(cryptoName);
         String json = response.body();
         int status = response.statusCode();
-        if ((status >= 400 && status < 500) || json.length() > 21) {
+        if ((status >= 400 && status < 500) || json.length() > MIN_JSON_LEN_FOR_ERR) {
             throw new IllegalArgumentException(json);//non existent crypto name or other client side request issue
         }
         if (status >= 200 && status < 300) {

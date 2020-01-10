@@ -5,8 +5,9 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static demo.Config.URL_FMT;
+
 public class PortfolioRunner {
-    static final String URL_FMT = "https://min-api.cryptocompare.com/data/price?fsym=%s&tsyms=EUR";//properties?
 
     private PortfolioRunner() {
     }

@@ -5,7 +5,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
+
+import static demo.Config.HTTP_REQ_TIMEOUT;
 
 public class HttpGateway implements PriceProvider {
 
@@ -18,13 +19,13 @@ public class HttpGateway implements PriceProvider {
 
     public HttpResponse<String> getPrice(String cryptoName) {
         URI uri = URI.create(String.format(urlFormat, cryptoName));
-        HttpRequest request = HttpRequest.newBuilder().GET().timeout(Duration.ofSeconds(30)).uri(uri).build();//timeout normally a property
+        HttpRequest request = HttpRequest.newBuilder().GET().timeout(HTTP_REQ_TIMEOUT).uri(uri).build();
         try {
             return httpClient.send(request, HttpResponse.BodyHandlers.ofString());//sync for this simple case, there aren't many crypto coins traded
         } catch (IOException e) {
             throw new IllegalStateException("Problem with the HTTP round trip to get the price for " + cryptoName, e);
         } catch (InterruptedException e) {
-            throw new IllegalStateException("Interrupted", e);
+            throw new IllegalStateException("Interrupted", e);//to do follow up on interrupt ctrl-c behavior
         }
     }
 }

@@ -6,18 +6,19 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.stream.Stream;
 
+import static demo.Config.URL_FMT;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PortfolioIntegrationTest {
 
     private static final BigDecimal zero = new BigDecimal(0);
-    private static final Portfolio portfolio = new Portfolio(new HttpGateway(PortfolioRunner.URL_FMT));
+    private static final Portfolio portfolio = new Portfolio(new HttpGateway(URL_FMT));
 
     @Test
     public void equityNonExistentCrypto() {
         IllegalArgumentException exception = Assert.assertThrows(IllegalArgumentException.class,
-                () -> new Portfolio(new HttpGateway(PortfolioRunner.URL_FMT)).equity(Stream.of("a=2")));
+                () -> new Portfolio(new HttpGateway(URL_FMT)).equity(Stream.of("a=2")));
         assertThat(exception.getMessage().matches("\\{.+\\}"), equalTo(true));
     }
 
