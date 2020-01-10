@@ -17,8 +17,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PortfolioUnitTest {
 
+    private static final Portfolio portfolio = new Portfolio(cryptoName -> mockedResponse());//mockito
     private static final BigDecimal zero = new BigDecimal(0);
-    private static final Portfolio portfolio = new Portfolio(cryptoName -> mockedResponse());
     private static final BigDecimal price = new BigDecimal("2.2");
 
     @Test
@@ -51,7 +51,7 @@ public class PortfolioUnitTest {
         assertThat(portfolio.equity(Stream.of("BTC=123", "XRP=127834")), equalTo(new BigDecimal(123+127834).multiply(price)));
     }
 
-    private static HttpResponse<String> mockedResponse() {
+    private static HttpResponse<String> mockedResponse() {//normally use a Mockito type framework, not sure if allowed so manually mocking
         return new HttpResponse<>() {
             @Override
             public int statusCode() {
