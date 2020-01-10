@@ -8,9 +8,9 @@ import static demo.Config.MIN_JSON_LEN_FOR_ERR;
 
 class Portfolio {
     private static final BigDecimal zero = new BigDecimal(0);
-    private final PriceProvider priceProvider;
+    private final HttpPriceProvider priceProvider;
 
-    Portfolio(PriceProvider priceProvider) {
+    Portfolio(HttpPriceProvider priceProvider) {
         this.priceProvider = priceProvider;
     }
 

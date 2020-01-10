@@ -8,7 +8,7 @@ import java.net.http.HttpResponse;
 
 import static demo.Config.HTTP_REQ_TIMEOUT;
 
-public class HttpGateway implements PriceProvider {
+public class HttpGateway implements HttpPriceProvider {
 
     private final HttpClient httpClient = HttpClient.newBuilder().build();
     private final String urlFormat;
