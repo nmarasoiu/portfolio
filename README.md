@@ -2,8 +2,6 @@
 To run, please execute this command line:
 bash equity.sh <filepath>
 
-Hello,
-Thanks for the assignment. Please find the code, runner script & tests at https://github.com/nmarasoiu/portfolio
 Since the requirement was for it to be simple (not over engineered), I applied this to the extreme that, in some respects I consider it under engineered:
 Normally I would also do a spring context with interfaces and combining those separate aspects of http gateway, file format parsing, and portfolio summarization, in separate interfaces + implementations, wired in an IoC context.
 Also the URI would be a configuration.
