@@ -1,3 +1,2 @@
 # portfolio
-
-Executing with one argument: file path
+bash equity.sh <filepath>
