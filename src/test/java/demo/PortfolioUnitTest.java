@@ -17,7 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PortfolioUnitTest {
 
-    private static final Portfolio portfolio = new Portfolio(cryptoName -> mockedResponse());//mockito
+    private static final Portfolio portfolio = new Portfolio(cryptoName -> mockedResponse());//mockito normally
     private static final BigDecimal zero = new BigDecimal(0);
     private static final BigDecimal price = new BigDecimal("2.2");
 

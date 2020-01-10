@@ -5,19 +5,20 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 
 public class HttpGateway implements PriceProvider {
 
     private final HttpClient httpClient = HttpClient.newBuilder().build();
     private final String urlFormat;
 
-    public HttpGateway(String urlFormat) {
+    HttpGateway(String urlFormat) {
         this.urlFormat = urlFormat;
     }
 
     public HttpResponse<String> getPrice(String cryptoName) {
         URI uri = URI.create(String.format(urlFormat, cryptoName));
-        HttpRequest request = HttpRequest.newBuilder().GET().uri(uri).build();
+        HttpRequest request = HttpRequest.newBuilder().GET().timeout(Duration.ofSeconds(30)).uri(uri).build();//timeout normally a property
         try {
             return httpClient.send(request, HttpResponse.BodyHandlers.ofString());//sync for this simple case, there aren't many crypto coins traded
         } catch (IOException e) {
